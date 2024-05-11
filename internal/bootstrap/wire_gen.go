@@ -45,7 +45,7 @@ func Up() (*Dependencies, error) {
 // wire.go:
 
 func newGRPCService(cfg *config.Config) (api.ApiClient, error) {
-	clientConn, err := grpc.NewClient(cfg.Services.API.Address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	clientConn, err := grpc.NewClient(cfg.GRPC.API.Address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, fmt.Errorf("failed creating new grpc client: %w", err)
 	}

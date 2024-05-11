@@ -14,26 +14,24 @@ var (
 	mutex         = new(sync.Mutex)
 )
 
-const configFilename = "config.json"
-
 type Config struct {
 	HTTP     HTTP     `json:"http"`
 	JWT      JWT      `json:"jwt"`
 	Oauth    Oauth    `json:"oauth"`
 	Log      Logger   `json:"logger"`
-	Services Services `json:"services"`
+	GRPC     GRPC     `json:"grpc"`
 	Postgres Postgres `json:"postgres"`
 	Redis    Redis    `json:"redis"`
 }
 
 type HTTP struct {
-	Address string `json:"address" default:":8081"`
+	Address string `json:"address" envconfig:"HTTP_ADDRESS" default:":8080"`
 }
 
 type JWT struct {
-	Secret           string `json:"secret" default:"my-totally-secret-key"`
-	AccessExpiresIn  int    `json:"access_expires_in" default:"1"`
-	RefreshExpiresIn int    `json:"refresh_expires_in" default:"168"`
+	Secret           string `json:"secret"             envconfig:"JWT_SECRET"             default:"my-totally-secret-key"`
+	AccessExpiresIn  int    `json:"access_expires_in"  envconfig:"JWT_ACCESS_EXPIRES_IN"  default:"1"`
+	RefreshExpiresIn int    `json:"refresh_expires_in" envconfig:"JWT_REFRESH_EXPIRES_IN" default:"168"`
 }
 
 type Oauth struct {
@@ -41,37 +39,37 @@ type Oauth struct {
 }
 
 type Google struct {
-	ClientID     string   `json:"client_id"`
-	ClientSecret string   `json:"client_secret"`
-	RedirectURL  string   `json:"redirect_url" default:"http://localhost:8081/oauth2callback"`
-	Scopes       []string `json:"scopes" default:"https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid"`
+	ClientID     string   `json:"client_id"     envconfig:"OAUTH_GOOGLE_CLIENT_ID"`
+	ClientSecret string   `json:"client_secret" envconfig:"OAUTH_GOOGLE_CLIENT_SECRET"`
+	RedirectURL  string   `json:"redirect_url"  envconfig:"OAUTH_GOOGLE_REDIRECT_URL" default:"http://localhost:8081/oauth2callback"`
+	Scopes       []string `json:"scopes"        envconfig:"OAUTH_GOOGLE_SCOPES"       default:"https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid"`
 }
 
 type Logger struct {
-	Level string `json:"level" default:"info"`
+	Level string `json:"level" envconfig:"LOGGER_LEVEL" default:"info"`
 }
 
-type Services struct {
+type GRPC struct {
 	API APIService `json:"api"`
 }
 
 type APIService struct {
-	Address string `json:"address" default:"localhost:8180"`
+	Address string `json:"address" envconfig:"GRPC_API_ADDRESS" default:"localhost:8180"`
 }
 
 type Postgres struct {
-	Host     string `json:"host" default:"localhost"`
-	Port     int    `json:"port" default:"5432"`
-	Database string `json:"database" default:"oss"`
-	User     string `json:"user" default:"oss"`
-	Password string `json:"password"`
-	Log      bool   `json:"log" default:"true"`
+	Host     string `json:"host"     envconfig:"POSTGRES_HOST"     default:"localhost"`
+	Port     int    `json:"port"     envconfig:"POSTGRES_PORT"     default:"5432"`
+	Database string `json:"database" envconfig:"POSTGRES_DATABASE" default:"sportgroup_auth"`
+	User     string `json:"user"     envconfig:"POSTGRES_USER"     default:"sportgroup_api_user"`
+	Password string `json:"password" envconfig:"POSTGRES_PASSWORD"`
+	Log      bool   `json:"log"      envconfig:"POSTGRES_LOG"      default:"true"`
 }
 
 type Redis struct {
-	Address  string `json:"address" default:"localhost:6379"`
+	Address  string `json:"address" envconfig:"REDIS_ADDRESS" default:"localhost:6379"`
 	Password string `json:"password"`
-	DB       int    `json:"db" default:"0"`
+	DB       int    `json:"db"      envconfig:"REDIS_DB"      default:"0"`
 }
 
 func New() (*Config, error) {
