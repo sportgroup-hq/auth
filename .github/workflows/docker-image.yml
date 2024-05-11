@@ -47,5 +47,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.ACCESS_TOKEN }}
+            GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
           labels: ${{ steps.meta.outputs.labels }}
