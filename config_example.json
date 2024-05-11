@@ -1,7 +1,2 @@
 {
-  "oauth": {
-    "google": {
-      "redirect_url": "http://localhost:5173"
-    }
-  }
 }

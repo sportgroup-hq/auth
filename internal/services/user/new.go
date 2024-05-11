@@ -1,11 +1,15 @@
 package user
 
-import "github.com/sportgroup-hq/common-lib/api"
+import (
+	"github.com/sportgroup-hq/common-lib/api"
+)
 
 type Service struct {
 	api api.ApiClient
 }
 
 func New(api api.ApiClient) *Service {
-	return &Service{api}
+	return &Service{
+		api: api,
+	}
 }

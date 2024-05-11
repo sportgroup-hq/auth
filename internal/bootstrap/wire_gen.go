@@ -8,9 +8,11 @@ package bootstrap
 
 import (
 	"fmt"
-
 	"github.com/sportgroup-hq/auth/internal/config"
 	"github.com/sportgroup-hq/auth/internal/services/auth"
+	"github.com/sportgroup-hq/auth/internal/services/httpserver"
+	"github.com/sportgroup-hq/auth/internal/services/postgres"
+	"github.com/sportgroup-hq/auth/internal/services/redis"
 	"github.com/sportgroup-hq/auth/internal/services/user"
 	"github.com/sportgroup-hq/common-lib/api"
 	"google.golang.org/grpc"
@@ -29,14 +31,20 @@ func Up() (*Dependencies, error) {
 		return nil, err
 	}
 	service := user.New(apiClient)
-	authService := auth.NewService(service)
-	dependencies := NewDependencies(configConfig, authService, service, apiClient)
+	postgresPostgres := postgres.New(configConfig)
+	redisService, err := redis.New(configConfig)
+	if err != nil {
+		return nil, err
+	}
+	authService := auth.NewService(configConfig, service, postgresPostgres, redisService)
+	httpServer := httpserver.New(configConfig, authService)
+	dependencies := NewDependencies(configConfig, httpServer, authService, service, apiClient, postgresPostgres, redisService)
 	return dependencies, nil
 }
 
 // wire.go:
 
-func newGRPCService(cfg config.Config) (api.ApiClient, error) {
+func newGRPCService(cfg *config.Config) (api.ApiClient, error) {
 	clientConn, err := grpc.NewClient(cfg.Services.API.Address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, fmt.Errorf("failed creating new grpc client: %w", err)

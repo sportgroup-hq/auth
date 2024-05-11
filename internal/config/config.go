@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	config        Config
+	config        *Config
 	isInitialised bool
 	mutex         = new(sync.Mutex)
 )
@@ -17,11 +17,23 @@ var (
 const configFilename = "config.json"
 
 type Config struct {
-	Address   string   `json:"address" default:":8080"`
-	JwtSecret string   `json:"jwt_secret" default:"my-totally-secret-key"`
-	Oauth     Oauth    `json:"oauth"`
-	Log       Logger   `json:"logger"`
-	Services  Services `json:"services"`
+	HTTP     HTTP     `json:"http"`
+	JWT      JWT      `json:"jwt"`
+	Oauth    Oauth    `json:"oauth"`
+	Log      Logger   `json:"logger"`
+	Services Services `json:"services"`
+	Postgres Postgres `json:"postgres"`
+	Redis    Redis    `json:"redis"`
+}
+
+type HTTP struct {
+	Address string `json:"address" default:":8081"`
+}
+
+type JWT struct {
+	Secret           string `json:"secret" default:"my-totally-secret-key"`
+	AccessExpiresIn  int    `json:"access_expires_in" default:"1"`
+	RefreshExpiresIn int    `json:"refresh_expires_in" default:"168"`
 }
 
 type Oauth struct {
@@ -31,7 +43,7 @@ type Oauth struct {
 type Google struct {
 	ClientID     string   `json:"client_id"`
 	ClientSecret string   `json:"client_secret"`
-	RedirectURL  string   `json:"redirect_url" default:"http://localhost:8080/api/v1/test"`
+	RedirectURL  string   `json:"redirect_url" default:"http://localhost:8081/oauth2callback"`
 	Scopes       []string `json:"scopes" default:"https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid"`
 }
 
@@ -44,10 +56,25 @@ type Services struct {
 }
 
 type APIService struct {
-	Address string `json:"address" default:"localhost:8081"`
+	Address string `json:"address" default:"localhost:8180"`
 }
 
-func New() (Config, error) {
+type Postgres struct {
+	Host     string `json:"host" default:"localhost"`
+	Port     int    `json:"port" default:"5432"`
+	Database string `json:"database" default:"oss"`
+	User     string `json:"user" default:"oss"`
+	Password string `json:"password"`
+	Log      bool   `json:"log" default:"true"`
+}
+
+type Redis struct {
+	Address  string `json:"address" default:"localhost:6379"`
+	Password string `json:"password"`
+	DB       int    `json:"db" default:"0"`
+}
+
+func New() (*Config, error) {
 	var cfg Config
 
 	filename := configFilename
@@ -59,16 +86,16 @@ func New() (Config, error) {
 	}
 
 	if err := goconfig.Init(&cfg, filename); err != nil {
-		return Config{}, fmt.Errorf("init config: %w", err)
+		return nil, fmt.Errorf("init config: %w", err)
 	}
 
-	config = cfg
+	config = &cfg
 	isInitialised = true
 
-	return cfg, nil
+	return &cfg, nil
 }
 
-func Get() Config {
+func Get() *Config {
 	mutex.Lock()
 	if !isInitialised {
 		cfg, err := New()
