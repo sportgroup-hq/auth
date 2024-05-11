@@ -67,9 +67,9 @@ type Postgres struct {
 }
 
 type Redis struct {
-	Address  string `json:"address" envconfig:"REDIS_ADDRESS" default:"localhost:6379"`
-	Password string `json:"password"`
-	DB       int    `json:"db"      envconfig:"REDIS_DB"      default:"0"`
+	Host     string `json:"host"     envconfig:"REDIS_HOST"    default:"localhost:6379"`
+	DB       int    `json:"db"       envconfig:"REDIS_DB"      default:"0"`
+	Password string `json:"password" envconfig:"REDIS_PASSWORD"`
 }
 
 func New() (*Config, error) {

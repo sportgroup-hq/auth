@@ -14,7 +14,7 @@ type Service struct {
 
 func New(cfg *config.Config) (*Service, error) {
 	redisCli := redis.NewClient(&redis.Options{
-		Addr:     cfg.Redis.Address,
+		Addr:     cfg.Redis.Host,
 		Password: cfg.Redis.Password,
 		DB:       cfg.Redis.DB,
 	})
