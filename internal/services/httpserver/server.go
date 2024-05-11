@@ -16,7 +16,8 @@ func (s *HTTPServer) Start() error {
 		validation.Register(v)
 	}
 
-	authPath := r.Group("/auth")
+	apiPath := r.Group("/api/v1")
+	authPath := apiPath.Group("/auth")
 
 	authPath.GET("/oauth2callback", s.oauthCallback)
 
