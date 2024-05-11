@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"log/slog"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,7 +11,7 @@ func (s *HTTPServer) oauthCallback(ctx *gin.Context) {
 	code := ctx.Query("code")
 	if code == "" {
 		url := s.authService.GetOAuthConsentURL(ctx)
-		ctx.Redirect(302, url)
+		ctx.Redirect(http.StatusSeeOther, url)
 		return
 	}
 

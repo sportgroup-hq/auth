@@ -16,12 +16,14 @@ func (s *HTTPServer) Start() error {
 		validation.Register(v)
 	}
 
-	r.GET("/oauth2callback", s.oauthCallback)
+	authPath := r.Group("/auth")
 
-	r.POST("/login", s.login)
-	r.POST("/register", s.register)
+	authPath.GET("/oauth2callback", s.oauthCallback)
 
-	r.POST("/refresh-token", s.refreshToken)
+	authPath.POST("/login", s.login)
+	authPath.POST("/register", s.register)
+
+	authPath.POST("/refresh-token", s.refreshToken)
 
 	slog.Info("Starting HTTP server on " + s.cfg.HTTP.Address + "...")
 

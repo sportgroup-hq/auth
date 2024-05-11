@@ -1,9 +1,0 @@
-{
-  "oauth": {
-    "google": {
-      "client_id": "428851485487-m0oig2380edp64scjv34csin5ocbl49q.apps.googleusercontent.com",
-      "client_secret": "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",
-      "redirect_url": "http://localhost:8080/oauth2callback"
-    }
-  }
-}
