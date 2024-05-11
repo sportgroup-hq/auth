@@ -3,6 +3,7 @@ package httpserver
 import (
 	"fmt"
 	"log/slog"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -49,7 +50,7 @@ func (s *HTTPServer) register(ctx *gin.Context) {
 	token, err := s.authService.Register(ctx, &reqBody)
 	if err != nil {
 		slog.ErrorContext(ctx, fmt.Sprintf("failed to register: %s", err))
-		ctx.AbortWithStatus(500)
+		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 

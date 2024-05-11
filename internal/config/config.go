@@ -54,7 +54,7 @@ type GRPC struct {
 }
 
 type APIService struct {
-	Address string `json:"address" envconfig:"GRPC_API_ADDRESS" default:"localhost:8180"`
+	Address string `json:"address" envconfig:"GRPC_API_ADDRESS" default:"localhost:8081"`
 }
 
 type Postgres struct {
