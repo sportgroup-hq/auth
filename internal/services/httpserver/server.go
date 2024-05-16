@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -16,6 +17,8 @@ func (s *HTTPServer) Start() error {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		validation.Register(v)
 	}
+
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	api := r.Group("/api/v1")
 	authPath := api.Group("/auth")
