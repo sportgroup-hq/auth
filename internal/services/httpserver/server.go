@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"log/slog"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -20,7 +21,7 @@ func (s *HTTPServer) Start() error {
 	authPath := api.Group("/auth")
 
 	authPath.GET("/ping", func(ctx *gin.Context) {
-		ctx.String(200, "auth pong")
+		ctx.String(http.StatusOK, "auth pong")
 	})
 
 	authPath.GET("/oauth2callback", s.oauthCallback)

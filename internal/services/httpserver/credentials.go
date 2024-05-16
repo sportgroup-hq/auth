@@ -25,14 +25,14 @@ func (s *HTTPServer) login(ctx *gin.Context) {
 	token, err := s.authService.LoginWithEmail(ctx, reqBody.Email, reqBody.Password)
 	if err != nil {
 		slog.ErrorContext(ctx, fmt.Sprintf("failed to login: %s", err))
-		ctx.AbortWithStatusJSON(401, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"error": "wrong email or password",
 		})
 
 		return
 	}
 
-	ctx.JSON(200, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"access_token":  token.AccessToken,
 		"token_type":    token.TokenType,
 		"expires_in":    token.Expiry,
@@ -54,7 +54,7 @@ func (s *HTTPServer) register(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"access_token":  token.AccessToken,
 		"token_type":    token.TokenType,
 		"expires_in":    token.Expiry,

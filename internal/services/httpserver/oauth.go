@@ -18,11 +18,11 @@ func (s *HTTPServer) oauthCallback(ctx *gin.Context) {
 	token, err := s.authService.ExchangeProvidersCode(ctx, code)
 	if err != nil {
 		slog.ErrorContext(ctx, "Failed to exchange token: %s", err)
-		ctx.String(500, "Failed to exchange token")
+		ctx.String(http.StatusInternalServerError, "Failed to exchange token")
 		return
 	}
 
-	ctx.JSON(200, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"access_token":  token.AccessToken,
 		"refresh_token": token.RefreshToken,
 		"token_type":    token.TokenType,
