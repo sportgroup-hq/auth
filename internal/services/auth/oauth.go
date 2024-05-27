@@ -44,13 +44,12 @@ func (s *Service) ExchangeProvidersCode(ctx context.Context, code string) (*oaut
 			return nil, fmt.Errorf("failed to get user by email: %w", err)
 		}
 	} else {
-		lastName := idTokenPayload.Claims["family_name"].(string)
 		picture := idTokenPayload.Claims["picture"].(string)
 
 		user, err = s.userService.CreateUser(ctx, &api.CreateUserRequest{
 			Email:     email,
 			FirstName: idTokenPayload.Claims["given_name"].(string),
-			LastName:  lastName,
+			LastName:  idTokenPayload.Claims["family_name"].(string),
 			Picture:   &picture,
 		})
 		if err != nil {
