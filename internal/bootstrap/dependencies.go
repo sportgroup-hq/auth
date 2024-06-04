@@ -2,8 +2,8 @@ package bootstrap
 
 import (
 	"github.com/sportgroup-hq/auth/internal/config"
+	"github.com/sportgroup-hq/auth/internal/controller/httpserver"
 	"github.com/sportgroup-hq/auth/internal/services/auth"
-	"github.com/sportgroup-hq/auth/internal/services/httpserver"
 	"github.com/sportgroup-hq/auth/internal/services/postgres"
 	"github.com/sportgroup-hq/auth/internal/services/redis"
 	userGRPC "github.com/sportgroup-hq/auth/internal/services/user"
@@ -13,7 +13,7 @@ import (
 type Dependencies struct {
 	Config *config.Config
 
-	HTTPServer *httpserver.HTTPServer
+	HTTPServer *httpserver.Server
 
 	AuthService *auth.Service
 
@@ -25,7 +25,7 @@ type Dependencies struct {
 	Redis    *redis.Service
 }
 
-func NewDependencies(config *config.Config, httpServer *httpserver.HTTPServer, authService *auth.Service,
+func NewDependencies(config *config.Config, httpServer *httpserver.Server, authService *auth.Service,
 	userService *userGRPC.Service, grpcApiClient api.ApiClient, postgres *postgres.Postgres,
 	redis *redis.Service) *Dependencies {
 	return &Dependencies{

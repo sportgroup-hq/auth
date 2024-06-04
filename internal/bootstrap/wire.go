@@ -8,8 +8,8 @@ import (
 
 	"github.com/google/wire"
 	"github.com/sportgroup-hq/auth/internal/config"
+	"github.com/sportgroup-hq/auth/internal/controller/httpserver"
 	"github.com/sportgroup-hq/auth/internal/services/auth"
-	"github.com/sportgroup-hq/auth/internal/services/httpserver"
 	"github.com/sportgroup-hq/auth/internal/services/postgres"
 	"github.com/sportgroup-hq/auth/internal/services/redis"
 	userGRPC "github.com/sportgroup-hq/auth/internal/services/user"

@@ -15,7 +15,7 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (s *HTTPServer) login(ctx *gin.Context) {
+func (s *Server) login(ctx *gin.Context) {
 	var reqBody LoginRequest
 
 	if err := ctx.MustBindWith(&reqBody, binding.JSON); err != nil {
@@ -33,14 +33,14 @@ func (s *HTTPServer) login(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"access_token":  token.AccessToken,
-		"token_type":    token.TokenType,
-		"expires_in":    token.Expiry,
-		"refresh_token": token.RefreshToken,
+		"accessToken":  token.AccessToken,
+		"refreshToken": token.RefreshToken,
+		"tokenType":    token.TokenType,
+		"expiry":       token.Expiry,
 	})
 }
 
-func (s *HTTPServer) register(ctx *gin.Context) {
+func (s *Server) register(ctx *gin.Context) {
 	var reqBody models.RegisterRequest
 
 	if err := ctx.MustBindWith(&reqBody, binding.JSON); err != nil {
@@ -55,9 +55,9 @@ func (s *HTTPServer) register(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"access_token":  token.AccessToken,
-		"token_type":    token.TokenType,
-		"expires_in":    token.Expiry,
-		"refresh_token": token.RefreshToken,
+		"accessToken":  token.AccessToken,
+		"refreshToken": token.RefreshToken,
+		"tokenType":    token.TokenType,
+		"expiry":       token.Expiry,
 	})
 }

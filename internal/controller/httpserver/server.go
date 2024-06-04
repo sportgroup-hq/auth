@@ -11,7 +11,7 @@ import (
 	"github.com/sportgroup-hq/common-lib/validation"
 )
 
-func (s *HTTPServer) Start() error {
+func (s *Server) Start() error {
 	r := gin.Default()
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {

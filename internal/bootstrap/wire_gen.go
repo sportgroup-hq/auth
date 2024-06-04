@@ -8,9 +8,10 @@ package bootstrap
 
 import (
 	"fmt"
+
 	"github.com/sportgroup-hq/auth/internal/config"
+	"github.com/sportgroup-hq/auth/internal/controller/httpserver"
 	"github.com/sportgroup-hq/auth/internal/services/auth"
-	"github.com/sportgroup-hq/auth/internal/services/httpserver"
 	"github.com/sportgroup-hq/auth/internal/services/postgres"
 	"github.com/sportgroup-hq/auth/internal/services/redis"
 	"github.com/sportgroup-hq/auth/internal/services/user"
@@ -37,8 +38,8 @@ func Up() (*Dependencies, error) {
 		return nil, err
 	}
 	authService := auth.NewService(configConfig, service, postgresPostgres, redisService)
-	httpServer := httpserver.New(configConfig, authService)
-	dependencies := NewDependencies(configConfig, httpServer, authService, service, apiClient, postgresPostgres, redisService)
+	server := httpserver.New(configConfig, authService)
+	dependencies := NewDependencies(configConfig, server, authService, service, apiClient, postgresPostgres, redisService)
 	return dependencies, nil
 }
 

@@ -8,10 +8,10 @@ import (
 )
 
 type RefreshTokenRequest struct {
-	RefreshToken string `json:"refresh_token" binding:"required"`
+	RefreshToken string `json:"refreshToken" binding:"required"`
 }
 
-func (s *HTTPServer) refreshToken(ctx *gin.Context) {
+func (s *Server) refreshToken(ctx *gin.Context) {
 	var reqBody RefreshTokenRequest
 
 	if err := ctx.MustBindWith(&reqBody, binding.JSON); err != nil {
@@ -26,9 +26,9 @@ func (s *HTTPServer) refreshToken(ctx *gin.Context) {
 	}
 
 	ctx.JSON(200, gin.H{
-		"access_token":  token.AccessToken,
-		"refresh_token": token.RefreshToken,
-		"token_type":    token.TokenType,
-		"expiry":        token.Expiry,
+		"accessToken":  token.AccessToken,
+		"refreshToken": token.RefreshToken,
+		"tokenType":    token.TokenType,
+		"expiry":       token.Expiry,
 	})
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *HTTPServer) oauthCallback(ctx *gin.Context) {
+func (s *Server) oauthCallback(ctx *gin.Context) {
 	code := ctx.Query("code")
 	if code == "" {
 		url := s.authService.GetOAuthConsentURL(ctx)
@@ -23,9 +23,9 @@ func (s *HTTPServer) oauthCallback(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"access_token":  token.AccessToken,
-		"refresh_token": token.RefreshToken,
-		"token_type":    token.TokenType,
-		"expiry":        token.Expiry,
+		"accessToken":  token.AccessToken,
+		"refreshToken": token.RefreshToken,
+		"tokenType":    token.TokenType,
+		"expiry":       token.Expiry,
 	})
 }

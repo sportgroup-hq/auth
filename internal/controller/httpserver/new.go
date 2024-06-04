@@ -16,14 +16,14 @@ type AuthService interface {
 	RefreshToken(ctx context.Context, refreshToken string) (*oauth2.Token, error)
 }
 
-type HTTPServer struct {
+type Server struct {
 	cfg *config.Config
 
 	authService AuthService
 }
 
-func New(cfg *config.Config, authService AuthService) *HTTPServer {
-	return &HTTPServer{
+func New(cfg *config.Config, authService AuthService) *Server {
+	return &Server{
 		cfg:         cfg,
 		authService: authService,
 	}
