@@ -3,9 +3,9 @@ package bootstrap
 import (
 	"github.com/sportgroup-hq/auth/internal/config"
 	"github.com/sportgroup-hq/auth/internal/controller/httpserver"
+	"github.com/sportgroup-hq/auth/internal/repo/postgres"
+	"github.com/sportgroup-hq/auth/internal/repo/redis"
 	"github.com/sportgroup-hq/auth/internal/services/auth"
-	"github.com/sportgroup-hq/auth/internal/services/postgres"
-	"github.com/sportgroup-hq/auth/internal/services/redis"
 	userGRPC "github.com/sportgroup-hq/auth/internal/services/user"
 	"github.com/sportgroup-hq/common-lib/api"
 )
