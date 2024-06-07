@@ -10,10 +10,15 @@ import (
 	"golang.org/x/oauth2"
 )
 
+type Claims struct {
+	jwt.RegisteredClaims
+	Type string `json:"typ"`
+}
+
 func (s *Service) RefreshToken(ctx context.Context, refreshToken string) (*oauth2.Token, error) {
-	parsedToken, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
-		return []byte(s.cfg.JWT.Secret), nil
-	})
+	var claims Claims
+
+	parsedToken, err := jwt.ParseWithClaims(refreshToken, &claims, s.jwtSecretFunc)
 	if err != nil || !parsedToken.Valid {
 		if errors.Is(err, jwt.ErrTokenExpired) {
 			return nil, fmt.Errorf("token expired: %w", err)
@@ -22,18 +27,11 @@ func (s *Service) RefreshToken(ctx context.Context, refreshToken string) (*oauth
 		return nil, fmt.Errorf("invalid token: %w", err)
 	}
 
-	claims := parsedToken.Claims.(jwt.MapClaims)
-
-	if claims["typ"] != "refresh" {
+	if claims.Type != "refresh" {
 		return nil, errors.New("you must provide a refresh token")
 	}
 
-	jwtID, ok := claims["jti"].(string)
-	if !ok {
-		return nil, errors.New("invalid token")
-	}
-
-	userIDKey := models.RefreshTokenUserIDKey(jwtID)
+	userIDKey := models.RefreshTokenUserIDKey(claims.ID)
 
 	userID, err := s.kvStore.Get(ctx, userIDKey)
 	if err != nil {
@@ -54,4 +52,8 @@ func (s *Service) RefreshToken(ctx context.Context, refreshToken string) (*oauth
 	}
 
 	return token, nil
+}
+
+func (s *Service) jwtSecretFunc(_ *jwt.Token) (interface{}, error) {
+	return []byte(s.cfg.JWT.Secret), nil
 }
